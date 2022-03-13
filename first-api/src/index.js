@@ -1,5 +1,6 @@
 const http = require('http');
 const { URL } = require('url');
+const bodyParser = require('./helpers/body-parser');
 
 const routes = require('./routes');
 
@@ -31,6 +32,12 @@ const server = http.createServer((req, res) => {
 
       res.end(JSON.stringify(body));
     };
+
+    if (['POST', 'PUT'].includes(req.method)) {
+      bodyParser(req, () => router.handler(req, res));
+
+      return;
+    }
 
     router.handler(req, res);
   } else {
