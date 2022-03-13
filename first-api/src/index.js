@@ -1,10 +1,10 @@
 const http = require('http');
-const url = require('url');
+const { URL } = require('url');
 
 const routes = require('./routes');
 
 const server = http.createServer((req, res) => {
-  const parsedUrl = url.parse(req.url, true);
+  const parsedUrl = new URL(`http://localhost:3333${req.url}`);
 
   const router = routes.find(
     (route) =>
@@ -12,7 +12,7 @@ const server = http.createServer((req, res) => {
   );
 
   if (router) {
-    req.query = parsedUrl.query;
+    req.query = Object.fromEntries(parsedUrl.searchParams);
 
     router.handler(req, res);
   } else {
