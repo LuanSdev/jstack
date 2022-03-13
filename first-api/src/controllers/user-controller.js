@@ -18,4 +18,24 @@ module.exports = {
 
     res.end(JSON.stringify(sortedUsers));
   },
+
+  listUsersById(req, res) {
+    const { id } = req.params;
+
+    const filteredUser = users.find((user) => user.id == Number(id));
+
+    if (!filteredUser) {
+      res.writeHead(200, {
+        'content-type': 'application/json',
+      });
+
+      return res.end(JSON.stringify({ error: 'User not found' }));
+    }
+
+    res.writeHead(200, {
+      'content-type': 'application/json',
+    });
+
+    res.end(JSON.stringify(filteredUser));
+  },
 };
