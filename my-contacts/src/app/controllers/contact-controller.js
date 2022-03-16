@@ -1,6 +1,10 @@
+const contactsRepository = require('../repositories/contacts-repository');
+
 class ContactController {
-  index(req, res) {
-    res.send('pimba');
+  async index(req, res) {
+    const contacts = await contactsRepository.findAll();
+
+    res.json(contacts);
   }
 }
 
