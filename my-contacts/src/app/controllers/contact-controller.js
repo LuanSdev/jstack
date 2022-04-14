@@ -32,6 +32,24 @@ class ContactController {
 
     res.sendStatus(204);
   }
+
+  async create(req, res) {
+    const { name, email, phone, category_id } = req.body;
+
+    if (!name || !phone || !email) {
+      return res.status(400).json({ error: 'Invalid contact data.' });
+    }
+
+    const contactAlreadyExists = await contactsRepository.findByName(name);
+
+    if (contactAlreadyExists) {
+      return res.json({ error: 'Contact already exists.' });
+    }
+
+    await contactsRepository.create({ name, email, phone, category_id });
+
+    res.sendStatus(200);
+  }
 }
 
 module.exports = new ContactController();
