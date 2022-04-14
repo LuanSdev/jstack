@@ -23,7 +23,9 @@ class ContactsRepository {
   }
 
   async findByName(name) {
-    const contact = contacts.find((obj) => obj.name === name);
+    const query = 'SELECT * FROM contacts WHERE name = $1';
+
+    const [contact] = await db.makeQuery(query, [name]);
 
     return contact;
   }
