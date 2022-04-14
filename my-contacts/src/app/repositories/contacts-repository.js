@@ -1,5 +1,7 @@
 const { randomUUID } = require('crypto');
 
+const db = require('../../database');
+
 let contacts = [
   {
     id: randomUUID(),
@@ -9,7 +11,6 @@ let contacts = [
     category_id: randomUUID(),
   },
 ];
-
 class ContactsRepository {
   async findAll() {
     return contacts;
@@ -21,8 +22,26 @@ class ContactsRepository {
     return contact;
   }
 
+  async findByName(name) {
+    const contact = contacts.find((obj) => obj.name === name);
+
+    return contact;
+  }
+
   async deleteById(id) {
     contacts = contacts.filter((obj) => obj.id !== id);
+  }
+
+  async create({ name, email, phone, category_id }) {
+    const query = `
+    INSERT INTO contacts(name, email, phone, category_id)
+    VALUES($1, $2, $3, $4)
+    RETURNING *
+  `;
+
+    const [row] = await db.makeQuery(query, [name, email, phone, category_id]);
+
+    return row;
   }
 }
 
